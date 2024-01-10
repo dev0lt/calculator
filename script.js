@@ -1,31 +1,71 @@
 "use strict";
 // Defining variables
-const calcButtons = document.querySelectorAll(".button");
+const btns = document.querySelectorAll(".button");
 const clearBtn = document.querySelector(".button_clear");
-const result = document.querySelector(".result");
+const resultHTML = document.querySelector(".result");
+const btnEqual = document.querySelector(".button_equal");
+const sign = document.querySelector(".sign");
 let resultValue = "";
 
+let signValue = "";
+
+const regex = /[-+*\/]/;
+
+let arr = [];
+
+function calculation(first, second) {
+  let a = Number(first);
+  let b = Number(second);
+  if (signValue === "+") {
+    return a + b;
+  } else if (signValue === "-") {
+    return a - b;
+  } else if (signValue === "*") {
+    return a * b;
+  } else if (signValue === "/") {
+    return a / b;
+  }
+}
+
+resultHTML.textContent = resultValue;
+
 // Clicking a button
-calcButtons.forEach((btn) =>
+btns.forEach((btn) =>
   btn.addEventListener("click", function (e) {
-    let clickedBtn = e.target.closest(".button");
-    if (result.textContent === "result") {
-      resultValue = clickedBtn.textContent;
-      result.textContent = resultValue;
-    } else if (
-      result.textContent !== "result" &&
-      resultValue.length < 12 &&
-      clickedBtn.textContent !== "C"
+    let clicked = e.target.closest(".button");
+    if (
+      // resultValue.length < 12 &&
+
+      clicked.textContent !== "C" &&
+      clicked.textContent !== "=" &&
+      !regex.test(clicked.textContent)
     ) {
-      resultValue += clickedBtn.textContent;
-      result.textContent = resultValue;
+      resultValue += clicked.textContent;
+      resultHTML.textContent = resultValue;
+    } else if (regex.test(clicked.textContent)) {
+      arr.push(resultValue);
+      resultValue = "";
+      resultHTML.textContent = "";
+      if (arr.length === 2) {
+        let newResult = calculation(arr[0], arr[1]);
+        resultValue = newResult;
+        resultHTML.textContent = resultValue;
+        arr = [];
+      }
+      sign.textContent = clicked.textContent;
+      signValue = clicked.textContent;
+    } else if (btn === btnEqual) {
+      let final = resultValue;
+      resultHTML.textContent = eval(final);
     } else if (btn === clearBtn) {
-      clearDisplay();
+      clear();
     }
   })
 );
 
-function clearDisplay() {
-  result.textContent = "";
+function clear() {
+  resultHTML.textContent = "";
   resultValue = "";
+  sign.textContent = "";
+  arr = [];
 }
