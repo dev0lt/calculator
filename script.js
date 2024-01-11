@@ -5,13 +5,14 @@ const clearBtn = document.querySelector(".button_clear");
 const resultHTML = document.querySelector(".result");
 const btnEqual = document.querySelector(".button_equal");
 const sign = document.querySelector(".sign");
-let resultValue = "";
+let currentValue = "";
 
 let signValue = "";
 
 const regex = /[-+*\/]/;
 
 let arr = [];
+let sum = 0;
 
 function calculation(first, second) {
   let a = Number(first);
@@ -27,45 +28,59 @@ function calculation(first, second) {
   }
 }
 
-resultHTML.textContent = resultValue;
+function clear() {
+  resultHTML.textContent = "";
+  currentValue = "";
+  sign.textContent = "";
+  arr = [];
+  sum = 0;
+}
+
+resultHTML.textContent = currentValue;
 
 // Clicking a button
 btns.forEach((btn) =>
   btn.addEventListener("click", function (e) {
     let clicked = e.target.closest(".button");
+    if (clicked.textContent === "." && currentValue === "") return;
+    if (currentValue.length > 12 && clicked.textContent !== "C") return;
     if (
-      // resultValue.length < 12 &&
-
       clicked.textContent !== "C" &&
       clicked.textContent !== "=" &&
       !regex.test(clicked.textContent)
     ) {
-      resultValue += clicked.textContent;
-      resultHTML.textContent = resultValue;
+      currentValue += clicked.textContent;
+      resultHTML.textContent = currentValue;
     } else if (regex.test(clicked.textContent)) {
-      arr.push(resultValue);
-      resultValue = "";
-      resultHTML.textContent = "";
-      if (arr.length === 2) {
-        let newResult = calculation(arr[0], arr[1]);
-        resultValue = newResult;
-        resultHTML.textContent = resultValue;
-        arr = [];
+      if (currentValue === "" && arr.length === 0) return;
+      if (currentValue !== "") {
+        arr.push(currentValue);
       }
-      sign.textContent = clicked.textContent;
+      console.log(arr);
+      if (arr[0] && arr[1]) {
+        sum = calculation(arr[0], arr[1]);
+        arr = [sum];
+        console.log(arr);
+      }
+      currentValue = "";
+      resultHTML.textContent = arr[0];
       signValue = clicked.textContent;
+      sign.textContent = signValue;
     } else if (btn === btnEqual) {
-      let final = resultValue;
-      resultHTML.textContent = eval(final);
+      if (arr.length === 0) return;
+      if (currentValue === "") return;
+      arr.push(currentValue);
+      console.log(arr);
+      sum = calculation(arr[0], arr[1]);
+      currentValue = "";
+      resultHTML.textContent = sum;
+      arr = [sum];
+      signValue = "";
+      sign.textContent = signValue;
+      console.log(arr);
     } else if (btn === clearBtn) {
       clear();
+      console.log(sum, arr);
     }
   })
 );
-
-function clear() {
-  resultHTML.textContent = "";
-  resultValue = "";
-  sign.textContent = "";
-  arr = [];
-}
