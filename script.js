@@ -4,6 +4,7 @@ const btns = document.querySelectorAll(".button");
 const clearBtn = document.querySelector(".button_clear");
 const resultHTML = document.querySelector(".result");
 const btnEqual = document.querySelector(".button_equal");
+const sequence = document.querySelector(".calculator_sequence");
 
 const regex = /[-+*\/]/;
 const regex2 = /[=C]/;
@@ -34,6 +35,13 @@ function clear() {
   currentValue = "";
   arr = [];
   sum = 0;
+  sequence.textContent = "";
+}
+
+function createSequence() {
+  sequence.textContent = `${arr[0]} ${signValue} ${
+    arr[1] ? arr[1] + " =" : ""
+  }`;
 }
 
 resultHTML.textContent = currentValue;
@@ -71,6 +79,7 @@ btns.forEach((btn) =>
       currentValue = "";
       resultHTML.textContent = arr[0];
       signValue = clicked.textContent;
+      createSequence();
       console.log(signValue);
     } else if (btn === btnEqual) {
       if (arr.length === 0) return;
@@ -78,6 +87,7 @@ btns.forEach((btn) =>
       arr.push(currentValue);
       // console.log(arr);
       sum = calculation(arr[0], arr[1]);
+      createSequence();
       currentValue = "";
       resultHTML.textContent = sum;
       arr = [sum];
