@@ -4,7 +4,6 @@ const btns = document.querySelectorAll(".button");
 const clearBtn = document.querySelector(".button_clear");
 const resultHTML = document.querySelector(".result");
 const btnEqual = document.querySelector(".button_equal");
-const sign = document.querySelector(".sign");
 
 const regex = /[-+*\/]/;
 const regex2 = /[=C]/;
@@ -33,7 +32,6 @@ function calculation(first, second) {
 function clear() {
   resultHTML.textContent = "";
   currentValue = "";
-  sign.textContent = "";
   arr = [];
   sum = 0;
 }
@@ -83,7 +81,6 @@ btns.forEach((btn) =>
       resultHTML.textContent = sum;
       arr = [sum];
       signValue = "";
-      sign.textContent = signValue;
       // console.log(arr);
     } else if (btn === clearBtn) {
       clear();

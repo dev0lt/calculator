@@ -1,5 +1,6 @@
 :root {
   background-color: rgb(234, 194, 245);
+  box-sizing: border-box;
 }
 
 .calculator_body {
@@ -16,13 +17,23 @@
   align-items: center;
 }
 
+
+
 .calculator_screen {
+  box-sizing: border-box;
+  padding: 10px 15px;
   margin: 10px;
   margin-bottom: 20px;
   width: 270px;
   height: 100px;
   background-color: rgb(234, 194, 245);
   border-radius: 18px;
+}
+
+.calculator_sequence {
+  color: grey;
+  display: flex;
+  justify-content: right;
 }
 
 .result {
@@ -32,6 +43,8 @@
   top: 35%;
   text-align: center;
   user-select: none;
+  display: flex;
+  justify-content: right
 }
 
 .buttons {
