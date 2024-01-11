@@ -21,11 +21,11 @@ function calculation(first, second) {
   if (signValue === "+") {
     return parseFloat((a + b).toFixed(5));
   } else if (signValue === "-") {
-    return parseFloat((a + b).toFixed(5));
+    return parseFloat((a - b).toFixed(5));
   } else if (signValue === "*") {
-    return parseFloat((a + b).toFixed(5));
+    return parseFloat((a * b).toFixed(5));
   } else if (signValue === "/") {
-    return parseFloat((a + b).toFixed(5));
+    return parseFloat((a / b).toFixed(5));
   }
 }
 
@@ -62,15 +62,16 @@ btns.forEach((btn) =>
       if (currentValue !== "") {
         arr.push(currentValue);
       }
-      // console.log(arr);
+      console.log(arr);
       if (arr[0] && arr[1]) {
         sum = calculation(arr[0], arr[1]);
         arr = [sum];
-        // console.log(arr);
+        console.log(arr);
       }
       currentValue = "";
       resultHTML.textContent = arr[0];
       signValue = clicked.textContent;
+      console.log(signValue);
     } else if (btn === btnEqual) {
       if (arr.length === 0) return;
       if (currentValue === "") return;
