@@ -3,12 +3,13 @@
 const screen = document.querySelector(".calculator_screen");
 const btnsNumber = document.querySelectorAll(".number");
 const btnsOperator = document.querySelectorAll(".operator");
+const changeSign = document.querySelector(".button_change-sign");
+const btnEqual = document.querySelector(".button_equal");
 const clearBtn = document.querySelector(".button_clear");
 const resultHTML = document.querySelector(".result");
-const btnEqual = document.querySelector(".button_equal");
 const sequence = document.querySelector(".calculator_sequence");
 
-const regex = /[-+*\/]/;
+const regex = /[-+*÷]/;
 const regex2 = /[=C]/;
 
 let currentValue = "";
@@ -27,7 +28,7 @@ function calculation(first, second) {
     return parseFloat((a - b).toFixed(5));
   } else if (signValue === "*") {
     return parseFloat((a * b).toFixed(5));
-  } else if (signValue === "/") {
+  } else if (signValue === "÷") {
     return parseFloat((a / b).toFixed(5));
   }
 }
@@ -46,6 +47,20 @@ function createSequence() {
   }`;
 }
 
+function change() {
+  if (!currentValue) return;
+  if (!currentValue.includes("-")) {
+    let minus = "-";
+    minus += currentValue;
+    currentValue = minus;
+    resultHTML.textContent = currentValue;
+  } else if (currentValue.includes("-")) {
+    let plus = currentValue.slice(1);
+    currentValue = plus;
+    resultHTML.textContent = currentValue;
+  }
+}
+
 function cantDivideBy0() {
   resultHTML.style.setProperty("font-size", "30px");
   resultHTML.style.setProperty("justify-content", "center");
@@ -56,13 +71,15 @@ function cantDivideBy0() {
   sequence.textContent = "";
 }
 
-// resultHTML.textContent = currentValue;
+resultHTML.textContent = currentValue;
+sequence.textContent = currentValue;
 
 // Clicking a button event
 
 btnsNumber.forEach((btn) =>
   btn.addEventListener("click", function (e) {
     let clicked = e.target.closest(".number");
+    if (currentValue.length >= 12) return;
     if ((resultHTML.textContent = "Can't divide by 0")) {
       resultHTML.style.setProperty("font-size", "2.5rem");
       resultHTML.style.setProperty("justify-content", "right");
@@ -75,10 +92,11 @@ btnsNumber.forEach((btn) =>
       !regex2.test(clicked.textContent)
     )
       return;
-
-    if (currentValue.length > 12) return;
-
     currentValue += clicked.textContent;
+    let currentValueWithoutComma = currentValue.replaceAll(" ", "");
+    if (currentValue.length > 2 && currentValueWithoutComma.length % 3 === 0) {
+      currentValue += " ";
+    }
     resultHTML.textContent = currentValue;
   })
 );
@@ -90,30 +108,31 @@ btnsOperator.forEach((btn) =>
     if (clicked.textContent === "." && currentValue === "") return;
     if (clicked.textContent === "." && currentValue.includes(".")) return;
     if (clicked.textContent === "." && currentValue !== "") {
+      if (currentValue.length >= 12) return;
       currentValue += clicked.textContent;
       resultHTML.textContent = currentValue;
     }
     if (regex.test(clicked.textContent)) {
       if (currentValue === "" && arr.length === 0) return;
       if (currentValue !== "") {
-        arr.push(currentValue);
+        arr.push(currentValue.replaceAll(" ", ""));
       }
-      console.log(arr);
+      // console.log(arr);
       if (arr[0] && arr[1]) {
         sum = calculation(arr[0], arr[1]);
         arr = [sum];
-        console.log(arr);
+        // console.log(arr);
       }
       currentValue = "";
       resultHTML.textContent = arr[0];
       signValue = clicked.textContent;
       createSequence();
-      console.log(signValue);
+      // console.log(signValue);
     } else if (btn === btnEqual) {
       if (arr.length === 0) return;
       if (currentValue === "") return;
-      arr.push(currentValue);
-      if (arr[1] === "0" && signValue === "/") {
+      arr.push(currentValue.replaceAll(" ", ""));
+      if (arr[1] === "0" && signValue === "÷") {
         cantDivideBy0();
       } else {
         sum = calculation(arr[0], arr[1]);
@@ -130,7 +149,9 @@ btnsOperator.forEach((btn) =>
   })
 );
 
-/*
+changeSign.addEventListener("click", change);
+
+/* OLD METHOD - BUGGY
 btns.forEach((btn) =>
   btn.addEventListener("click", function (e) {
     let clicked = e.target.closest(".button");
