@@ -1,6 +1,8 @@
 "use strict";
 // Defining variables
-const btns = document.querySelectorAll(".button");
+const screen = document.querySelector(".calculator_screen");
+const btnsNumber = document.querySelectorAll(".number");
+const btnsOperator = document.querySelectorAll(".operator");
 const clearBtn = document.querySelector(".button_clear");
 const resultHTML = document.querySelector(".result");
 const btnEqual = document.querySelector(".button_equal");
@@ -44,9 +46,91 @@ function createSequence() {
   }`;
 }
 
-resultHTML.textContent = currentValue;
+function cantDivideBy0() {
+  resultHTML.style.setProperty("font-size", "30px");
+  resultHTML.style.setProperty("justify-content", "center");
+  resultHTML.textContent = "Can't divide by 0";
+  currentValue = "";
+  arr = [];
+  sum = 0;
+  sequence.textContent = "";
+}
+
+// resultHTML.textContent = currentValue;
 
 // Clicking a button event
+
+btnsNumber.forEach((btn) =>
+  btn.addEventListener("click", function (e) {
+    let clicked = e.target.closest(".number");
+    if ((resultHTML.textContent = "Can't divide by 0")) {
+      resultHTML.style.setProperty("font-size", "2.5rem");
+      resultHTML.style.setProperty("justify-content", "right");
+    }
+
+    if (
+      arr[0] &&
+      signValue === "" &&
+      !regex.test(clicked.textContent) &&
+      !regex2.test(clicked.textContent)
+    )
+      return;
+
+    if (currentValue.length > 12) return;
+
+    currentValue += clicked.textContent;
+    resultHTML.textContent = currentValue;
+  })
+);
+
+btnsOperator.forEach((btn) =>
+  btn.addEventListener("click", function (e) {
+    let clicked = e.target.closest(".operator");
+
+    if (clicked.textContent === "." && currentValue === "") return;
+    if (clicked.textContent === "." && currentValue.includes(".")) return;
+    if (clicked.textContent === "." && currentValue !== "") {
+      currentValue += clicked.textContent;
+      resultHTML.textContent = currentValue;
+    }
+    if (regex.test(clicked.textContent)) {
+      if (currentValue === "" && arr.length === 0) return;
+      if (currentValue !== "") {
+        arr.push(currentValue);
+      }
+      console.log(arr);
+      if (arr[0] && arr[1]) {
+        sum = calculation(arr[0], arr[1]);
+        arr = [sum];
+        console.log(arr);
+      }
+      currentValue = "";
+      resultHTML.textContent = arr[0];
+      signValue = clicked.textContent;
+      createSequence();
+      console.log(signValue);
+    } else if (btn === btnEqual) {
+      if (arr.length === 0) return;
+      if (currentValue === "") return;
+      arr.push(currentValue);
+      if (arr[1] === "0" && signValue === "/") {
+        cantDivideBy0();
+      } else {
+        sum = calculation(arr[0], arr[1]);
+        createSequence();
+        currentValue = "";
+        resultHTML.textContent = sum;
+        arr = [sum];
+        signValue = "";
+      }
+      // console.log(arr);
+    } else if (btn === clearBtn) {
+      clear();
+    }
+  })
+);
+
+/*
 btns.forEach((btn) =>
   btn.addEventListener("click", function (e) {
     let clicked = e.target.closest(".button");
@@ -99,3 +183,4 @@ btns.forEach((btn) =>
     }
   })
 );
+*/
