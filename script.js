@@ -132,7 +132,7 @@ btnsOperator.forEach((btn) =>
       if (arr.length === 0) return;
       if (currentValue === "") return;
       arr.push(currentValue.replaceAll(" ", ""));
-      if (arr[1] === "0" && signValue === "÷") {
+      if (arr[1] === "0" || (arr[1] === "-0" && signValue === "÷")) {
         cantDivideBy0();
       } else {
         sum = calculation(arr[0], arr[1]);
